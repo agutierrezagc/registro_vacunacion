@@ -46,6 +46,7 @@ public class CoreEmpleadosEntity {
         this.fechaNacimiento = fechaNacimiento;
     }
 
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "CORE_EMPLEADOS")
@@ -200,7 +201,7 @@ public class CoreEmpleadosEntity {
         this.coreCredencialesById = coreCredencialesById;
     }
 
-    @OneToMany(mappedBy = "coreEmpleadosByIdEmpleado")
+    @OneToMany(mappedBy = "coreEmpleadosByIdEmpleado",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public List<CoreRolAsignadoEntity> getCoreRolAsignadosById() {
         return coreRolAsignadosById;
     }
@@ -209,7 +210,7 @@ public class CoreEmpleadosEntity {
         this.coreRolAsignadosById = coreRolAsignadosById;
     }
 
-    @OneToMany(mappedBy = "coreEmpleadosByIdEmpleado")
+    @OneToMany(mappedBy = "coreEmpleadosByIdEmpleado",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public List<CoreVacunacionEntity> getCoreVacunacionsById() {
         return coreVacunacionsById;
     }

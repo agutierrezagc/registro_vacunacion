@@ -64,16 +64,12 @@ public class EmpleadoCoreServiceImpl implements EmpleadoCoreService {
             String usuario = Utils.generaUsuario(empleadoNuevo.getNombres(),empleadoNuevo.getCedula());
             //Generar credenciales
             CoreCredencialesEntity credenciales = new CoreCredencialesEntity(usuario, Utils.generateStorngPasswordHash(empleadoNuevo.getCedula()), "I", empleado);
-            // buscar rol
-            ParRolesEntity rol = parRolesRepository.getById(empleadoNuevo.getRol());
-            // asigna rol
-            CoreRolAsignadoEntity rolAsignado = new CoreRolAsignadoEntity("A", empleado, rol);
-            listaRoles.add(rolAsignado);
+            //Asignar rol
+            empleado.setCoreRolAsignadosById(asignarRol(empleadoNuevo.getRol(),empleado));
 
-            empleado.setCoreRolAsignadosById(listaRoles);
             empleado.setCoreCredencialesById(credenciales);
             empleado.setFechaRegistro(new Timestamp(System.currentTimeMillis()));
-
+            //almacenar en BD
             persistirEmpleado(empleado);
         }else {
             throw new BadRequestException(mensajeValidacion);
@@ -106,9 +102,18 @@ public class EmpleadoCoreServiceImpl implements EmpleadoCoreService {
         try{
             empleadosRepository.save(empleado);
         }catch (Exception e){
-            e.printStackTrace();
-            throw new BadRequestException("Error, registro no almacenado");
+            throw new BadRequestException("Error, registro no almacenado, posible duplicidad de CI");
         }
+    }
+
+    private List<CoreRolAsignadoEntity> asignarRol(int idRol, CoreEmpleadosEntity empleado){
+        List<CoreRolAsignadoEntity> listaRoles = new ArrayList<>();
+        // buscar rol
+        ParRolesEntity rol = parRolesRepository.getById(idRol);
+        // asigna rol
+        CoreRolAsignadoEntity rolAsignado = new CoreRolAsignadoEntity("A", empleado, rol);
+        listaRoles.add(rolAsignado);
+        return listaRoles;
     }
 
     /**
@@ -145,7 +150,7 @@ public class EmpleadoCoreServiceImpl implements EmpleadoCoreService {
         List<CoreVacunacionEntity> listaDosisAplicadasVacuna = new ArrayList<CoreVacunacionEntity>();
         for(VacunaEmpleadoPojo dosis : actualizaEmpleado.getDosisVacuna()){
             ParTipoVacunaEntity tipoVacuna = parTipoVacunaRepository.getById(dosis.getIdTipoVacuna());
-            listaDosisAplicadasVacuna.add(new CoreVacunacionEntity("A", dosis.getDosis(), dosis.getFechaDosis(),empleado,tipoVacuna));
+            listaDosisAplicadasVacuna.add(new CoreVacunacionEntity("A", dosis.getDosis(), dosis.getFechaDosis(),empleado,tipoVacuna,new Timestamp(System.currentTimeMillis())));
         }
         return listaDosisAplicadasVacuna;
     }

@@ -2,6 +2,7 @@ package com.krugercorp.ec.vacunacion.entitys;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
@@ -10,7 +11,7 @@ import java.util.Objects;
 public class CoreVacunacionEntity {
     private Integer id;
 //    private Integer idEmpleado;
-    private Date fechaRegistro;
+    private Timestamp fechaRegistro;
     private String estado;
 //    private Integer idTipoVacuna;
     private Integer dosis;
@@ -21,12 +22,13 @@ public class CoreVacunacionEntity {
     public CoreVacunacionEntity() {
     }
 
-    public CoreVacunacionEntity(String estado, Integer dosis, Date fechaDosis, CoreEmpleadosEntity coreEmpleadosByIdEmpleado, ParTipoVacunaEntity parTipoVacunaByIdTipoVacuna) {
+    public CoreVacunacionEntity(String estado, Integer dosis, Date fechaDosis, CoreEmpleadosEntity coreEmpleadosByIdEmpleado, ParTipoVacunaEntity parTipoVacunaByIdTipoVacuna, Timestamp fechaRegistro) {
         this.estado = estado;
         this.dosis = dosis;
         this.fechaDosis = fechaDosis;
         this.coreEmpleadosByIdEmpleado = coreEmpleadosByIdEmpleado;
         this.parTipoVacunaByIdTipoVacuna = parTipoVacunaByIdTipoVacuna;
+        this.fechaRegistro = fechaRegistro;
     }
 
     @Id
@@ -52,11 +54,11 @@ public class CoreVacunacionEntity {
 
     @Basic
     @Column(name = "fecha_registro")
-    public Date getFechaRegistro() {
+    public Timestamp getFechaRegistro() {
         return fechaRegistro;
     }
 
-    public void setFechaRegistro(Date fechaRegistro) {
+    public void setFechaRegistro(Timestamp fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     }
 

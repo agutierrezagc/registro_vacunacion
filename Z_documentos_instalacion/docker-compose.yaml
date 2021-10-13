@@ -1,0 +1,39 @@
+version: '3.3'
+
+services:
+  postgres_db:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: adminadmin
+      POSTGRES_DB: inventario_vacunacion
+    hostname: vacunacion_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - kruger_network
+
+  registro_vacunacion:
+    image: azul/zulu-openjdk-alpine:8
+    restart: unless-stopped
+    environment:
+      DATA_URL: jdbc:postgresql://postgres_db:5432/inventario_vacunacion
+      DATA_USER: postgres
+      DATA_PASS: adminadmin
+    hostname: fundem-router
+    volumes:
+      - ./target/vacunacion-0.0.1.jar:/vacunacion-0.0.1.jar
+    ports:
+      - "8090:8090"
+    command: java -jar vacunacion-0.0.1.jar
+    depends_on:
+      - activemq
+    networks:
+      - kruger_network
+
+networks:
+  kruger_network:
+    driver: bridge

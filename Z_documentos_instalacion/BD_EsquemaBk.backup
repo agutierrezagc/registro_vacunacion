@@ -1,0 +1,825 @@
+
+--
+-- TOC entry 4 (class 2615 OID 21722)
+-- Name: registro_vacunacion; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA registro_vacunacion;
+
+
+ALTER SCHEMA registro_vacunacion OWNER TO postgres;
+
+--
+-- TOC entry 3040 (class 0 OID 0)
+-- Dependencies: 4
+-- Name: SCHEMA registro_vacunacion; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON SCHEMA registro_vacunacion IS 'esquema para registro vacunacion';
+
+
+SET default_tablespace = '';
+
+
+--
+-- TOC entry 204 (class 1259 OID 21742)
+-- Name: core_credenciales; Type: TABLE; Schema: registro_vacunacion; Owner: postgres
+--
+
+CREATE TABLE registro_vacunacion.core_credenciales (
+    id integer NOT NULL,
+    id_empleado integer NOT NULL,
+    usuario character varying(50) NOT NULL,
+    clave character varying(200) NOT NULL,
+    estado character varying(2) NOT NULL
+);
+
+
+ALTER TABLE registro_vacunacion.core_credenciales OWNER TO postgres;
+
+--
+-- TOC entry 3041 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: TABLE core_credenciales; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON TABLE registro_vacunacion.core_credenciales IS 'tabla para regitrar las credenciales de usuario que tiene el empleado';
+
+
+--
+-- TOC entry 3042 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: COLUMN core_credenciales.id; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_credenciales.id IS 'Primary key de la tabla core_credenciales';
+
+
+--
+-- TOC entry 3043 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: COLUMN core_credenciales.id_empleado; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_credenciales.id_empleado IS 'relacion con el registro empleado';
+
+
+--
+-- TOC entry 3044 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: COLUMN core_credenciales.usuario; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_credenciales.usuario IS 'registra el nombre de usuario';
+
+
+--
+-- TOC entry 3045 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: COLUMN core_credenciales.clave; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_credenciales.clave IS 'registra la contraseña hash salteada';
+
+
+--
+-- TOC entry 3046 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: COLUMN core_credenciales.estado; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_credenciales.estado IS 'estado A=Activo, X=Inactivo, C=debe cambiar contraseña';
+
+
+--
+-- TOC entry 203 (class 1259 OID 21733)
+-- Name: core_empleados; Type: TABLE; Schema: registro_vacunacion; Owner: postgres
+--
+
+CREATE TABLE registro_vacunacion.core_empleados (
+    id integer NOT NULL,
+    nombres character varying(150) NOT NULL,
+    primer_apellido character varying(150) NOT NULL,
+    segundo_apellido character varying(150),
+    tercer_apellido character varying(150),
+    correo_electronico character varying(150),
+    domicilio character varying(300),
+    telefono_movil character varying(15),
+    fecha_nacimiento date,
+    fecha_registro timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    estado character varying(2),
+    cedula character varying(10) NOT NULL
+);
+
+
+ALTER TABLE registro_vacunacion.core_empleados OWNER TO postgres;
+
+--
+-- TOC entry 3047 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: TABLE core_empleados; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON TABLE registro_vacunacion.core_empleados IS 'tabla para el registro de empleados';
+
+
+--
+-- TOC entry 3048 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: COLUMN core_empleados.id; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_empleados.id IS 'primary key de la tabla core_empleados';
+
+
+--
+-- TOC entry 3049 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: COLUMN core_empleados.nombres; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_empleados.nombres IS 'registrar los nombres del empleado';
+
+
+--
+-- TOC entry 3050 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: COLUMN core_empleados.primer_apellido; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_empleados.primer_apellido IS 'registrar el apellido paterno o unico apellido ';
+
+
+--
+-- TOC entry 3051 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: COLUMN core_empleados.segundo_apellido; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_empleados.segundo_apellido IS 'registrar el apellido materno, opcional si solo tiene un apellido';
+
+
+--
+-- TOC entry 3052 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: COLUMN core_empleados.tercer_apellido; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_empleados.tercer_apellido IS 'registrar el apellido de casada si es que lo tubiera';
+
+
+--
+-- TOC entry 3053 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: COLUMN core_empleados.correo_electronico; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_empleados.correo_electronico IS 'registrar el correo electronico del empleado';
+
+
+--
+-- TOC entry 3054 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: COLUMN core_empleados.domicilio; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_empleados.domicilio IS 'registrar el domicilio del empleado';
+
+
+--
+-- TOC entry 3055 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: COLUMN core_empleados.telefono_movil; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_empleados.telefono_movil IS 'registrar el celular del empleado';
+
+
+--
+-- TOC entry 3056 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: COLUMN core_empleados.fecha_nacimiento; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_empleados.fecha_nacimiento IS 'registra la fecha de nacimiento del empleado';
+
+
+--
+-- TOC entry 3057 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: COLUMN core_empleados.fecha_registro; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_empleados.fecha_registro IS 'registra la fecha en que se realizo el registro';
+
+
+--
+-- TOC entry 3058 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: COLUMN core_empleados.estado; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_empleados.estado IS 'estado A=Activo, X=Inactivo';
+
+
+--
+-- TOC entry 3059 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: COLUMN core_empleados.cedula; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_empleados.cedula IS 'registrar el numero de ci del empleado';
+
+
+--
+-- TOC entry 205 (class 1259 OID 21754)
+-- Name: core_rol_asignado; Type: TABLE; Schema: registro_vacunacion; Owner: postgres
+--
+
+CREATE TABLE registro_vacunacion.core_rol_asignado (
+    id integer NOT NULL,
+    id_empleado integer,
+    id_rol integer,
+    estado character varying(2)
+);
+
+
+ALTER TABLE registro_vacunacion.core_rol_asignado OWNER TO postgres;
+
+--
+-- TOC entry 3060 (class 0 OID 0)
+-- Dependencies: 205
+-- Name: TABLE core_rol_asignado; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON TABLE registro_vacunacion.core_rol_asignado IS 'Tabla para registrar los roles que tendra el usuario';
+
+
+--
+-- TOC entry 3061 (class 0 OID 0)
+-- Dependencies: 205
+-- Name: COLUMN core_rol_asignado.id; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_rol_asignado.id IS 'Primary key de la tabla core rol asignado';
+
+
+--
+-- TOC entry 3062 (class 0 OID 0)
+-- Dependencies: 205
+-- Name: COLUMN core_rol_asignado.id_empleado; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_rol_asignado.id_empleado IS 'relacion con el empleado';
+
+
+--
+-- TOC entry 3063 (class 0 OID 0)
+-- Dependencies: 205
+-- Name: COLUMN core_rol_asignado.id_rol; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_rol_asignado.id_rol IS 'relacion con el rol asignado';
+
+
+--
+-- TOC entry 3064 (class 0 OID 0)
+-- Dependencies: 205
+-- Name: COLUMN core_rol_asignado.estado; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_rol_asignado.estado IS 'estado A=Activo, X=Inactivo';
+
+
+--
+-- TOC entry 206 (class 1259 OID 21791)
+-- Name: core_vacunacion; Type: TABLE; Schema: registro_vacunacion; Owner: postgres
+--
+
+CREATE TABLE registro_vacunacion.core_vacunacion (
+    id integer NOT NULL,
+    id_empleado integer,
+    fecha_registro timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    estado character varying(2),
+    id_tipo_vacuna integer,
+    dosis integer,
+    fecha_dosis date
+);
+
+
+ALTER TABLE registro_vacunacion.core_vacunacion OWNER TO postgres;
+
+--
+-- TOC entry 3065 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: TABLE core_vacunacion; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON TABLE registro_vacunacion.core_vacunacion IS 'Tabla para registrar las dosis aplicadas de la vacuna a los empleados';
+
+
+--
+-- TOC entry 3066 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: COLUMN core_vacunacion.id; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_vacunacion.id IS 'primary key de la tabla core_vacunacion';
+
+
+--
+-- TOC entry 3067 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: COLUMN core_vacunacion.id_empleado; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_vacunacion.id_empleado IS 'relacion con el empleado';
+
+
+--
+-- TOC entry 3068 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: COLUMN core_vacunacion.fecha_registro; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_vacunacion.fecha_registro IS 'fecha de registro';
+
+
+--
+-- TOC entry 3069 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: COLUMN core_vacunacion.estado; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_vacunacion.estado IS 'estado A=Activo, X=Inactivo';
+
+
+--
+-- TOC entry 3070 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: COLUMN core_vacunacion.id_tipo_vacuna; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_vacunacion.id_tipo_vacuna IS 'relacion el tipo de vacuna';
+
+
+--
+-- TOC entry 3071 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: COLUMN core_vacunacion.dosis; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_vacunacion.dosis IS 'registra el numero de docis aplicadas al empleado';
+
+
+--
+-- TOC entry 3072 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: COLUMN core_vacunacion.fecha_dosis; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.core_vacunacion.fecha_dosis IS 'registra la fecha cuando se recibio la dosis';
+
+
+--
+-- TOC entry 201 (class 1259 OID 21723)
+-- Name: par_roles; Type: TABLE; Schema: registro_vacunacion; Owner: postgres
+--
+
+CREATE TABLE registro_vacunacion.par_roles (
+    id integer NOT NULL,
+    nombre_rol character varying(50) NOT NULL,
+    descripcion character varying(250),
+    estado character varying(2) NOT NULL
+);
+
+
+ALTER TABLE registro_vacunacion.par_roles OWNER TO postgres;
+
+--
+-- TOC entry 3073 (class 0 OID 0)
+-- Dependencies: 201
+-- Name: TABLE par_roles; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON TABLE registro_vacunacion.par_roles IS 'Tabla paramétrica para el registro de roles';
+
+
+--
+-- TOC entry 3074 (class 0 OID 0)
+-- Dependencies: 201
+-- Name: COLUMN par_roles.id; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.par_roles.id IS 'primary key tabla par roles';
+
+
+--
+-- TOC entry 3075 (class 0 OID 0)
+-- Dependencies: 201
+-- Name: COLUMN par_roles.nombre_rol; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.par_roles.nombre_rol IS 'campo destinado para otorgar un nombre descriptivo al rol';
+
+
+--
+-- TOC entry 3076 (class 0 OID 0)
+-- Dependencies: 201
+-- Name: COLUMN par_roles.descripcion; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.par_roles.descripcion IS 'campo para describir los alcances del rol';
+
+
+--
+-- TOC entry 3077 (class 0 OID 0)
+-- Dependencies: 201
+-- Name: COLUMN par_roles.estado; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.par_roles.estado IS 'estado  A=Activo, X=Inactivo';
+
+
+--
+-- TOC entry 202 (class 1259 OID 21728)
+-- Name: par_tipo_vacuna; Type: TABLE; Schema: registro_vacunacion; Owner: postgres
+--
+
+CREATE TABLE registro_vacunacion.par_tipo_vacuna (
+    id integer NOT NULL,
+    nombre_vacuna character varying(100) NOT NULL,
+    intervalo_dosis integer,
+    estado character varying(2) NOT NULL,
+    cantidad_dosis integer
+);
+
+
+ALTER TABLE registro_vacunacion.par_tipo_vacuna OWNER TO postgres;
+
+--
+-- TOC entry 3078 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: TABLE par_tipo_vacuna; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON TABLE registro_vacunacion.par_tipo_vacuna IS 'tabla parametrica para el registro de tipos de vacuna';
+
+
+--
+-- TOC entry 3079 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: COLUMN par_tipo_vacuna.id; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.par_tipo_vacuna.id IS 'Primary key de la tabla par_tipo_vacuna';
+
+
+--
+-- TOC entry 3080 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: COLUMN par_tipo_vacuna.nombre_vacuna; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.par_tipo_vacuna.nombre_vacuna IS 'registra el nombre descriptivo de la vacuna';
+
+
+--
+-- TOC entry 3081 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: COLUMN par_tipo_vacuna.intervalo_dosis; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.par_tipo_vacuna.intervalo_dosis IS 'registrar el la cantidad de dias que deben transcurrir para la siguiente dosis';
+
+
+--
+-- TOC entry 3082 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: COLUMN par_tipo_vacuna.estado; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.par_tipo_vacuna.estado IS 'estado A=Activo, X=Inactivo';
+
+
+--
+-- TOC entry 3083 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: COLUMN par_tipo_vacuna.cantidad_dosis; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON COLUMN registro_vacunacion.par_tipo_vacuna.cantidad_dosis IS 'registra la cantidad de dosis que se deben aplicar con el tipo de vacuna';
+
+
+--
+-- TOC entry 212 (class 1259 OID 21818)
+-- Name: sec_core_credenciales; Type: SEQUENCE; Schema: registro_vacunacion; Owner: postgres
+--
+
+CREATE SEQUENCE registro_vacunacion.sec_core_credenciales
+    START WITH 2
+    INCREMENT BY 1
+    NO MINVALUE
+    MAXVALUE 1000000000
+    CACHE 1;
+
+
+ALTER TABLE registro_vacunacion.sec_core_credenciales OWNER TO postgres;
+
+--
+-- TOC entry 3084 (class 0 OID 0)
+-- Dependencies: 212
+-- Name: SEQUENCE sec_core_credenciales; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON SEQUENCE registro_vacunacion.sec_core_credenciales IS 'secuencia para credenciales de usuario';
+
+
+--
+-- TOC entry 211 (class 1259 OID 21816)
+-- Name: sec_core_empleados; Type: SEQUENCE; Schema: registro_vacunacion; Owner: postgres
+--
+
+CREATE SEQUENCE registro_vacunacion.sec_core_empleados
+    START WITH 2
+    INCREMENT BY 1
+    NO MINVALUE
+    MAXVALUE 100000000000
+    CACHE 1;
+
+
+ALTER TABLE registro_vacunacion.sec_core_empleados OWNER TO postgres;
+
+--
+-- TOC entry 3085 (class 0 OID 0)
+-- Dependencies: 211
+-- Name: SEQUENCE sec_core_empleados; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON SEQUENCE registro_vacunacion.sec_core_empleados IS 'secuancia para empleados';
+
+
+--
+-- TOC entry 210 (class 1259 OID 21814)
+-- Name: sec_core_rol_asignado; Type: SEQUENCE; Schema: registro_vacunacion; Owner: postgres
+--
+
+CREATE SEQUENCE registro_vacunacion.sec_core_rol_asignado
+    START WITH 2
+    INCREMENT BY 1
+    NO MINVALUE
+    MAXVALUE 1000000000
+    CACHE 1;
+
+
+ALTER TABLE registro_vacunacion.sec_core_rol_asignado OWNER TO postgres;
+
+--
+-- TOC entry 3086 (class 0 OID 0)
+-- Dependencies: 210
+-- Name: SEQUENCE sec_core_rol_asignado; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON SEQUENCE registro_vacunacion.sec_core_rol_asignado IS 'secuencia rol asignado';
+
+
+--
+-- TOC entry 209 (class 1259 OID 21812)
+-- Name: sec_core_vacunacion; Type: SEQUENCE; Schema: registro_vacunacion; Owner: postgres
+--
+
+CREATE SEQUENCE registro_vacunacion.sec_core_vacunacion
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    MAXVALUE 1000000000
+    CACHE 1;
+
+
+ALTER TABLE registro_vacunacion.sec_core_vacunacion OWNER TO postgres;
+
+--
+-- TOC entry 3087 (class 0 OID 0)
+-- Dependencies: 209
+-- Name: SEQUENCE sec_core_vacunacion; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON SEQUENCE registro_vacunacion.sec_core_vacunacion IS 'secuencia para vacunacion';
+
+
+--
+-- TOC entry 208 (class 1259 OID 21809)
+-- Name: sec_par_roles; Type: SEQUENCE; Schema: registro_vacunacion; Owner: postgres
+--
+
+CREATE SEQUENCE registro_vacunacion.sec_par_roles
+    START WITH 3
+    INCREMENT BY 1
+    MINVALUE 3
+    MAXVALUE 100
+    CACHE 1;
+
+
+ALTER TABLE registro_vacunacion.sec_par_roles OWNER TO postgres;
+
+--
+-- TOC entry 3088 (class 0 OID 0)
+-- Dependencies: 208
+-- Name: SEQUENCE sec_par_roles; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON SEQUENCE registro_vacunacion.sec_par_roles IS 'secuencia para roles';
+
+
+--
+-- TOC entry 207 (class 1259 OID 21807)
+-- Name: sec_par_tipo_vacuna; Type: SEQUENCE; Schema: registro_vacunacion; Owner: postgres
+--
+
+CREATE SEQUENCE registro_vacunacion.sec_par_tipo_vacuna
+    START WITH 6
+    INCREMENT BY 1
+    MINVALUE 5
+    MAXVALUE 1000
+    CACHE 1;
+
+
+ALTER TABLE registro_vacunacion.sec_par_tipo_vacuna OWNER TO postgres;
+
+--
+-- TOC entry 3089 (class 0 OID 0)
+-- Dependencies: 207
+-- Name: SEQUENCE sec_par_tipo_vacuna; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON SEQUENCE registro_vacunacion.sec_par_tipo_vacuna IS 'secuancia para tipo vacuna';
+
+
+--
+-- TOC entry 2889 (class 2606 OID 21821)
+-- Name: core_empleados cedula_unica; Type: CONSTRAINT; Schema: registro_vacunacion; Owner: postgres
+--
+
+ALTER TABLE ONLY registro_vacunacion.core_empleados
+    ADD CONSTRAINT cedula_unica UNIQUE (cedula);
+
+
+--
+-- TOC entry 3090 (class 0 OID 0)
+-- Dependencies: 2889
+-- Name: CONSTRAINT cedula_unica ON core_empleados; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON CONSTRAINT cedula_unica ON registro_vacunacion.core_empleados IS 'restriccion de unicidad por cedula';
+
+
+--
+-- TOC entry 2893 (class 2606 OID 21746)
+-- Name: core_credenciales core_credenciales_pkey; Type: CONSTRAINT; Schema: registro_vacunacion; Owner: postgres
+--
+
+ALTER TABLE ONLY registro_vacunacion.core_credenciales
+    ADD CONSTRAINT core_credenciales_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2891 (class 2606 OID 21741)
+-- Name: core_empleados core_empleados_pkey; Type: CONSTRAINT; Schema: registro_vacunacion; Owner: postgres
+--
+
+ALTER TABLE ONLY registro_vacunacion.core_empleados
+    ADD CONSTRAINT core_empleados_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2895 (class 2606 OID 21758)
+-- Name: core_rol_asignado core_rol_asignado_pkey; Type: CONSTRAINT; Schema: registro_vacunacion; Owner: postgres
+--
+
+ALTER TABLE ONLY registro_vacunacion.core_rol_asignado
+    ADD CONSTRAINT core_rol_asignado_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2897 (class 2606 OID 21796)
+-- Name: core_vacunacion core_vacunacion_pkey; Type: CONSTRAINT; Schema: registro_vacunacion; Owner: postgres
+--
+
+ALTER TABLE ONLY registro_vacunacion.core_vacunacion
+    ADD CONSTRAINT core_vacunacion_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2885 (class 2606 OID 21727)
+-- Name: par_roles par_roles_pkey; Type: CONSTRAINT; Schema: registro_vacunacion; Owner: postgres
+--
+
+ALTER TABLE ONLY registro_vacunacion.par_roles
+    ADD CONSTRAINT par_roles_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2887 (class 2606 OID 21732)
+-- Name: par_tipo_vacuna par_tipo_vacuna_pkey; Type: CONSTRAINT; Schema: registro_vacunacion; Owner: postgres
+--
+
+ALTER TABLE ONLY registro_vacunacion.par_tipo_vacuna
+    ADD CONSTRAINT par_tipo_vacuna_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2898 (class 2606 OID 21747)
+-- Name: core_credenciales FK_rel_credenciales_empleados; Type: FK CONSTRAINT; Schema: registro_vacunacion; Owner: postgres
+--
+
+ALTER TABLE ONLY registro_vacunacion.core_credenciales
+    ADD CONSTRAINT "FK_rel_credenciales_empleados" FOREIGN KEY (id_empleado) REFERENCES registro_vacunacion.core_empleados(id);
+
+
+--
+-- TOC entry 3091 (class 0 OID 0)
+-- Dependencies: 2898
+-- Name: CONSTRAINT "FK_rel_credenciales_empleados" ON core_credenciales; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON CONSTRAINT "FK_rel_credenciales_empleados" ON registro_vacunacion.core_credenciales IS 'clave foranea con empleado';
+
+
+--
+-- TOC entry 2899 (class 2606 OID 21759)
+-- Name: core_rol_asignado FK_rel_rolasignado_empleado; Type: FK CONSTRAINT; Schema: registro_vacunacion; Owner: postgres
+--
+
+ALTER TABLE ONLY registro_vacunacion.core_rol_asignado
+    ADD CONSTRAINT "FK_rel_rolasignado_empleado" FOREIGN KEY (id_empleado) REFERENCES registro_vacunacion.core_empleados(id);
+
+
+--
+-- TOC entry 3092 (class 0 OID 0)
+-- Dependencies: 2899
+-- Name: CONSTRAINT "FK_rel_rolasignado_empleado" ON core_rol_asignado; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON CONSTRAINT "FK_rel_rolasignado_empleado" ON registro_vacunacion.core_rol_asignado IS 'clave foranea con empleado';
+
+
+--
+-- TOC entry 2900 (class 2606 OID 21764)
+-- Name: core_rol_asignado FK_rel_rolasignado_roles; Type: FK CONSTRAINT; Schema: registro_vacunacion; Owner: postgres
+--
+
+ALTER TABLE ONLY registro_vacunacion.core_rol_asignado
+    ADD CONSTRAINT "FK_rel_rolasignado_roles" FOREIGN KEY (id_rol) REFERENCES registro_vacunacion.par_roles(id);
+
+
+--
+-- TOC entry 3093 (class 0 OID 0)
+-- Dependencies: 2900
+-- Name: CONSTRAINT "FK_rel_rolasignado_roles" ON core_rol_asignado; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON CONSTRAINT "FK_rel_rolasignado_roles" ON registro_vacunacion.core_rol_asignado IS 'clave foranea para roles';
+
+
+--
+-- TOC entry 2901 (class 2606 OID 21797)
+-- Name: core_vacunacion FK_rel_vacunacion_empleado; Type: FK CONSTRAINT; Schema: registro_vacunacion; Owner: postgres
+--
+
+ALTER TABLE ONLY registro_vacunacion.core_vacunacion
+    ADD CONSTRAINT "FK_rel_vacunacion_empleado" FOREIGN KEY (id_empleado) REFERENCES registro_vacunacion.core_empleados(id);
+
+
+--
+-- TOC entry 3094 (class 0 OID 0)
+-- Dependencies: 2901
+-- Name: CONSTRAINT "FK_rel_vacunacion_empleado" ON core_vacunacion; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON CONSTRAINT "FK_rel_vacunacion_empleado" ON registro_vacunacion.core_vacunacion IS 'clave foranea para empleado';
+
+
+--
+-- TOC entry 2902 (class 2606 OID 21802)
+-- Name: core_vacunacion FK_rel_vacunacion_tipovacuna; Type: FK CONSTRAINT; Schema: registro_vacunacion; Owner: postgres
+--
+
+ALTER TABLE ONLY registro_vacunacion.core_vacunacion
+    ADD CONSTRAINT "FK_rel_vacunacion_tipovacuna" FOREIGN KEY (id_tipo_vacuna) REFERENCES registro_vacunacion.par_tipo_vacuna(id) NOT VALID;
+
+
+--
+-- TOC entry 3095 (class 0 OID 0)
+-- Dependencies: 2902
+-- Name: CONSTRAINT "FK_rel_vacunacion_tipovacuna" ON core_vacunacion; Type: COMMENT; Schema: registro_vacunacion; Owner: postgres
+--
+
+COMMENT ON CONSTRAINT "FK_rel_vacunacion_tipovacuna" ON registro_vacunacion.core_vacunacion IS 'clave foranea para tipo vacuna';
+
+
+-- Completed on 2021-10-13 01:16:01
+
+--
+-- PostgreSQL database dump complete
+--
+

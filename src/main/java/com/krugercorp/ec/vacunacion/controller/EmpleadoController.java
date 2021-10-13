@@ -2,20 +2,17 @@ package com.krugercorp.ec.vacunacion.controller;
 
 import com.krugercorp.ec.vacunacion.pojos.ActualizaEmpleadoPojo;
 import com.krugercorp.ec.vacunacion.pojos.RegistrarEmpleadoPojo;
+import com.krugercorp.ec.vacunacion.pojos.login.CredencialesPojo;
+import com.krugercorp.ec.vacunacion.pojos.login.User;
 import com.krugercorp.ec.vacunacion.services.EmpleadoCoreService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("empleado/")
@@ -26,49 +23,35 @@ public class EmpleadoController {
 
     @PostMapping("registro/")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     public void registraEmpleado(@RequestBody RegistrarEmpleadoPojo empleadoNuevo) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        System.out.println("entrada" +empleadoNuevo);
         empleadoCore.registroEmpleado(empleadoNuevo);
     }
 
-//    @PostMapping("asignar_rol")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void login(@RequestBody AsignaRolPojo asignar) {
-//        loginCore.asignaRol(asignar);
-//    }
+    @GetMapping("consulta/cedula={cedula}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    public ActualizaEmpleadoPojo consultaEmpleado(@PathVariable("cedula") String cedula){
+        return empleadoCore.consultarEmpleado(cedula);
+    }
 
     @PutMapping("actualizar/")
     @ResponseStatus(HttpStatus.OK)
-    public void actializaEmpleado(@RequestBody ActualizaEmpleadoPojo actualizaEmpleado){
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    public void actualizaEmpleado(@RequestBody ActualizaEmpleadoPojo actualizaEmpleado){
         empleadoCore.actualizaEmpleado(actualizaEmpleado);
     }
 
-//    @GetMapping(value = "/reimprime/{numFactura}", produces = MediaType.APPLICATION_PDF_VALUE)
-//    public InputStreamResource reimprimirFactura(@PathVariable("numFactura") String numeroFactura) {
-//        System.out.println("Numero Factura "+numeroFactura);
-//        return new InputStreamResource(iPagoService.reimprimeFactura(numeroFactura));
-//    }
-//
-//    @GetMapping("/carrito_m03_pagar5")
-//    public ResponseEntity<InputStreamResource> pagoTramites5(Authentication authentication)
-//            throws MalformedURLException {
-//        ResponseEntity bytes;
-//        bytes = null;
-//        try {
-//            bytes = iRestService.createPost(authentication);
-//        } catch (IOException e) {
-//            System.out.println("cccccc");
-//            e.printStackTrace();
-//        }
-//        return bytes;
-//    }
-//
-//    @DeleteMapping("carrito_m03/{id}")
-//    public ResponseEntity<?> Deletecarrito(@PathVariable("id") Long formM03Id) {
-//        Map<String, Object> response = new HashMap<>();
-//        iPagoService.EliminarItem(formM03Id);
-//        response.put("respuesta", "ok");
-//        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
-//    }
+    @DeleteMapping("eliminar/cedula={cedula}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    public void eliminaEmpleado(@PathVariable("cedula") String cedula){
+        empleadoCore.eliminaEmpleado(cedula);
+    }
 
+    @PostMapping("login")
+    @ResponseStatus(HttpStatus.OK)
+    public User login(@RequestBody CredencialesPojo credenciales) {
+        return empleadoCore.credencialIngreso(credenciales);
+    }
 }

@@ -8,6 +8,15 @@ public class VacunaEmpleadoPojo {
     private Integer dosis;
     private Date fechaDosis;
 
+    public VacunaEmpleadoPojo() {
+    }
+
+    public VacunaEmpleadoPojo(Integer idTipoVacuna, Integer dosis, Date fechaDosis) {
+        this.idTipoVacuna = idTipoVacuna;
+        this.dosis = dosis;
+        this.fechaDosis = fechaDosis;
+    }
+
     public Integer getIdTipoVacuna() {
         return idTipoVacuna;
     }

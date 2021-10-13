@@ -31,8 +31,7 @@ public class Utils {
      * @throws NoSuchAlgorithmException     exepcion que puede generarse
      * @throws InvalidKeySpecException      exepcion que puede generarse
      */
-    public static String generateStorngPasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException
-    {
+    public static String generateStorngPasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         int iterations = 1000;
         char[] chars = password.toCharArray();
         byte[] salt = getSalt();
@@ -48,8 +47,7 @@ public class Utils {
      * @return retorna numeros en byte[]
      * @throws NoSuchAlgorithmException exepcion que puede generarse
      */
-    private static byte[] getSalt() throws NoSuchAlgorithmException
-    {
+    private static byte[] getSalt() throws NoSuchAlgorithmException {
         SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
         byte[] salt = new byte[16];
         sr.nextBytes(salt);
@@ -63,8 +61,7 @@ public class Utils {
      * @return      cadena exagecimal
      * @throws NoSuchAlgorithmException     exepcion que puede generarse
      */
-    private static String toHex(byte[] array) throws NoSuchAlgorithmException
-    {
+    private static String toHex(byte[] array) throws NoSuchAlgorithmException {
         BigInteger bi = new BigInteger(1, array);
         String hex = bi.toString(16);
         int paddingLength = (array.length * 2) - hex.length();
@@ -76,13 +73,60 @@ public class Utils {
         }
     }
 
+    /**
+     * funcion para generar nombre de usuario
+     * @param nombres   nombres
+     * @param cedula    cedula
+     * @return nombre de usuario con formato [primer_nombre].[cedula_numero]
+     */
     public static String generaUsuario(String nombres, String cedula){
         int numero = Integer.parseInt(cedula);
         String usuario = nombres.split(" ")[0];
         usuario +="."+numero;
-        System.out.println("USUARIO CREADO "+usuario);
         return usuario;
     }
 
+    /**
+     * Funcion para validar la palabra clave
+     * @param originalPassword  palabra clave ingresada
+     * @param storedPassword    palabra clave almacenada en BD
+     * @return      valor booleano
+     * @throws NoSuchAlgorithmException exepcion que puede generarse
+     * @throws InvalidKeySpecException  exepcion que puede generarse
+     */
+    public static boolean validatePassword(String originalPassword, String storedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException
+    {
+        String[] parts = storedPassword.split(":");
+        int iterations = Integer.parseInt(parts[0]);
+        byte[] salt = fromHex(parts[1]);
+        byte[] hash = fromHex(parts[2]);
+
+        PBEKeySpec spec = new PBEKeySpec(originalPassword.toCharArray(), salt, iterations, hash.length * 8);
+        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        byte[] testHash = skf.generateSecret(spec).getEncoded();
+
+        int diff = hash.length ^ testHash.length;
+        for(int i = 0; i < hash.length && i < testHash.length; i++)
+        {
+            diff |= hash[i] ^ testHash[i];
+        }
+        return diff == 0;
+    }
+
+    /**
+     * Funcion para convertir de cadena exagecimal a byte[]
+     * @param hex   cadena Exagecimal
+     * @return      byte[]
+     * @throws NoSuchAlgorithmException exepcion que puede generarse
+     */
+    private static byte[] fromHex(String hex) throws NoSuchAlgorithmException
+    {
+        byte[] bytes = new byte[hex.length() / 2];
+        for(int i = 0; i<bytes.length ;i++)
+        {
+            bytes[i] = (byte)Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
+        }
+        return bytes;
+    }
 
 }

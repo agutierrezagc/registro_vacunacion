@@ -3,7 +3,6 @@ package com.krugercorp.ec.vacunacion.entitys;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 

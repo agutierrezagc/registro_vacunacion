@@ -10,18 +10,22 @@ public class CoreCredencialesEntity {
     private Integer id;
 //    private Integer idEmpleado;
     private String usuario;
-    private String contraseña;
+    private String clave;
     private String estado;
     private CoreEmpleadosEntity coreEmpleadosByIdEmpleado;
 
     public CoreCredencialesEntity() {
     }
 
-    public CoreCredencialesEntity(String usuario, String contraseña, String estado, CoreEmpleadosEntity coreEmpleadosByIdEmpleado) {
+    public CoreCredencialesEntity(String usuario, String clave, String estado, CoreEmpleadosEntity coreEmpleadosByIdEmpleado) {
         this.usuario = usuario;
-        this.contraseña = contraseña;
+        this.clave = clave;
         this.estado = estado;
         this.coreEmpleadosByIdEmpleado = coreEmpleadosByIdEmpleado;
+    }
+
+    public CoreCredencialesEntity(CoreCredencialesEntity usersCredentials) {
+
     }
 
     @Id
@@ -56,13 +60,13 @@ public class CoreCredencialesEntity {
     }
 
     @Basic
-    @Column(name = "contraseña")
-    public String getContraseña() {
-        return contraseña;
+    @Column(name = "clave")
+    public String getClave() {
+        return clave;
     }
 
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
+    public void setClave(String clave) {
+        this.clave = clave;
     }
 
     @Basic
@@ -83,13 +87,13 @@ public class CoreCredencialesEntity {
         return Objects.equals(id, that.id) &&
 //                Objects.equals(idEmpleado, that.idEmpleado) &&
                 Objects.equals(usuario, that.usuario) &&
-                Objects.equals(contraseña, that.contraseña) &&
+                Objects.equals(clave, that.clave) &&
                 Objects.equals(estado, that.estado);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, usuario, contraseña, estado);
+        return Objects.hash(id, usuario, clave, estado);
     }
 
     @OneToOne

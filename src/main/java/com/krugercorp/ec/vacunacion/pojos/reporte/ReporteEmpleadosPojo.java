@@ -1,10 +1,14 @@
-package com.krugercorp.ec.vacunacion.pojos;
+package com.krugercorp.ec.vacunacion.pojos.reporte;
+
+import com.krugercorp.ec.vacunacion.entitys.CoreCredencialesEntity;
+import com.krugercorp.ec.vacunacion.entitys.CoreRolAsignadoEntity;
+import com.krugercorp.ec.vacunacion.entitys.CoreVacunacionEntity;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
-public class ActualizaEmpleadoPojo {
+public class ReporteEmpleadosPojo {
     private String cedula;
     private String nombres;
     private String primerApellido;
@@ -13,13 +17,13 @@ public class ActualizaEmpleadoPojo {
     private String correoElectronico;
     private String domicilio;
     private String telefonoMovil;
-    private Date fechaNacimiento;
-    private List<VacunaEmpleadoPojo> dosisVacuna;
+    private String tipoVacuna;
+    private List<InfoVacunacionPojo> vacunacionInfo;
 
-    public ActualizaEmpleadoPojo() {
+    public ReporteEmpleadosPojo() {
     }
 
-    public ActualizaEmpleadoPojo(String cedula, String nombres, String primerApellido, String segundoApellido, String tercerApellido, String correoElectronico, String domicilio, String telefonoMovil, Date fechaNacimiento, List<VacunaEmpleadoPojo> dosisVacuna) {
+    public ReporteEmpleadosPojo(String cedula, String nombres, String primerApellido, String segundoApellido, String tercerApellido, String correoElectronico, String domicilio, String telefonoMovil, String tipoVacuna, List<InfoVacunacionPojo> vacunacionInfo) {
         this.cedula = cedula;
         this.nombres = nombres;
         this.primerApellido = primerApellido;
@@ -28,8 +32,8 @@ public class ActualizaEmpleadoPojo {
         this.correoElectronico = correoElectronico;
         this.domicilio = domicilio;
         this.telefonoMovil = telefonoMovil;
-        this.fechaNacimiento = fechaNacimiento;
-        this.dosisVacuna = dosisVacuna;
+        this.tipoVacuna = tipoVacuna;
+        this.vacunacionInfo = vacunacionInfo;
     }
 
     public String getCedula() {
@@ -96,19 +100,19 @@ public class ActualizaEmpleadoPojo {
         this.telefonoMovil = telefonoMovil;
     }
 
-    public Date getFechaNacimiento() {
-        return fechaNacimiento;
+    public String getTipoVacuna() {
+        return tipoVacuna;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
+    public void setTipoVacuna(String tipoVacuna) {
+        this.tipoVacuna = tipoVacuna;
     }
 
-    public List<VacunaEmpleadoPojo> getDosisVacuna() {
-        return dosisVacuna;
+    public List<InfoVacunacionPojo> getVacunacionInfo() {
+        return vacunacionInfo;
     }
 
-    public void setDosisVacuna(List<VacunaEmpleadoPojo> dosisVacuna) {
-        this.dosisVacuna = dosisVacuna;
+    public void setVacunacionInfo(List<InfoVacunacionPojo> vacunacionInfo) {
+        this.vacunacionInfo = vacunacionInfo;
     }
 }

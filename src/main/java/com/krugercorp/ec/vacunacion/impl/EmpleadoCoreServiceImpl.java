@@ -1,20 +1,24 @@
 package com.krugercorp.ec.vacunacion.impl;
 
+import com.google.gson.Gson;
 import com.krugercorp.ec.vacunacion.entitys.*;
 import com.krugercorp.ec.vacunacion.excepciones.BadRequestException;
+import com.krugercorp.ec.vacunacion.excepciones.UnathorizedException;
 import com.krugercorp.ec.vacunacion.pojos.ActualizaEmpleadoPojo;
 import com.krugercorp.ec.vacunacion.pojos.RegistrarEmpleadoPojo;
 import com.krugercorp.ec.vacunacion.pojos.VacunaEmpleadoPojo;
-import com.krugercorp.ec.vacunacion.repositorys.CoreEmpleadosRepository;
-import com.krugercorp.ec.vacunacion.repositorys.CoreRolAsignadoRepository;
-import com.krugercorp.ec.vacunacion.repositorys.ParRolesRepository;
-import com.krugercorp.ec.vacunacion.repositorys.ParTipoVacunaRepository;
+import com.krugercorp.ec.vacunacion.pojos.login.CredencialesPojo;
+import com.krugercorp.ec.vacunacion.pojos.login.PayLoadPojo;
+import com.krugercorp.ec.vacunacion.pojos.login.User;
+import com.krugercorp.ec.vacunacion.repositorys.*;
 import com.krugercorp.ec.vacunacion.services.EmpleadoCoreService;
 import com.krugercorp.ec.vacunacion.utils.Constantes;
 import com.krugercorp.ec.vacunacion.utils.Utils;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import io.jsonwebtoken.Jwts;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.Date;
@@ -26,24 +30,25 @@ import java.util.List;
 public class EmpleadoCoreServiceImpl implements EmpleadoCoreService {
 
     private CoreEmpleadosRepository empleadosRepository;
+    private CoreCredencialesRepository credencialesRepository;
+    private ParRolesRepository parRolesRepository;
+    private ParTipoVacunaRepository parTipoVacunaRepository;
+
     @Autowired
     public void setEmpleadosRepository(CoreEmpleadosRepository empleadosRepository) {
         this.empleadosRepository = empleadosRepository;
     }
 
-    private CoreRolAsignadoRepository rolAsignadoRepository;
     @Autowired
-    public void setRolAsignadoRepository(CoreRolAsignadoRepository rolAsignadoRepository) {
-        this.rolAsignadoRepository = rolAsignadoRepository;
+    public void setCredencialesRepository(CoreCredencialesRepository credencialesRepository) {
+        this.credencialesRepository = credencialesRepository;
     }
 
-    private ParRolesRepository parRolesRepository;
     @Autowired
     public void setParRolesRepository(ParRolesRepository parRolesRepository) {
         this.parRolesRepository = parRolesRepository;
     }
 
-    private ParTipoVacunaRepository parTipoVacunaRepository;
     @Autowired
     public void setParTipoVacunaRepository(ParTipoVacunaRepository parTipoVacunaRepository) {
         this.parTipoVacunaRepository = parTipoVacunaRepository;
@@ -60,7 +65,7 @@ public class EmpleadoCoreServiceImpl implements EmpleadoCoreService {
         String mensajeValidacion = verificaCamposMensaje(empleadoNuevo);
         if(mensajeValidacion.length() == 0) {
             CoreEmpleadosEntity empleado = castEmpleadoPojo(empleadoNuevo);
-            //Crear nombre de usuaio
+            //Crear nombre de usuario
             String usuario = Utils.generaUsuario(empleadoNuevo.getNombres(),empleadoNuevo.getCedula());
             //Generar credenciales
             CoreCredencialesEntity credenciales = new CoreCredencialesEntity(usuario, Utils.generateStorngPasswordHash(empleadoNuevo.getCedula()), "I", empleado);
@@ -76,6 +81,10 @@ public class EmpleadoCoreServiceImpl implements EmpleadoCoreService {
         }
     }
 
+    /**
+     * Actualiza datos de empleado
+     * @param actualizaEmpleado datos a actualizar
+     */
     @Override
     public void actualizaEmpleado(ActualizaEmpleadoPojo actualizaEmpleado){
         CoreEmpleadosEntity empleado = empleadosRepository.findByCedulaAndEstado(actualizaEmpleado.getCedula(),"A");
@@ -92,7 +101,79 @@ public class EmpleadoCoreServiceImpl implements EmpleadoCoreService {
 
     }
 
+    /**
+     * Elimina un empleado por número de cedula
+     * @param cedula número de cedula de 10 digitos(0000111222)
+     */
+    @Override
+    public void eliminaEmpleado(String cedula) {
+        //verifica formato cedula
+        verificaCedula(cedula);
+
+        CoreEmpleadosEntity empleadoEliminar = empleadosRepository.findByCedula(cedula);
+        empleadosRepository.delete(empleadoEliminar);
+    }
+
+    /**
+     * Obtener los datos de un empleado por cedula
+     * @param cedula número de cedula de 10 digitos(0000111222)
+     * @return estructura pojo con los datos del usuario
+     */
+    @Override
+    public ActualizaEmpleadoPojo consultarEmpleado(String cedula) {
+        //verifica formato cedula
+        verificaCedula(cedula);
+
+        CoreEmpleadosEntity empleadoConsultado = empleadosRepository.findByCedula(cedula);
+        return castEmpleadoPojo(empleadoConsultado);
+    }
+
+    /**
+     * Login para usuario
+     * @param credenciales  credenciales de ingreso
+     * @return      retorna el estado y token
+     */
+    @Override
+    public User credencialIngreso(CredencialesPojo credenciales) {
+        //buscar si usuario esta en la tabla credenciales
+        CoreCredencialesEntity storageCred = credencialesRepository.findByUsuario(credenciales.getUsuario());
+        //extraer contraseña hash
+        if(storageCred != null) {
+            try {
+                if (Utils.validatePassword(credenciales.getClave(), storageCred.getClave())) {
+                    //obtener token
+                    User us = new User(getJWTToken(storageCred), storageCred.getEstado().equals("I") ? true : false);
+                    return us;
+//            return new User(getJWTToken(storageCred),storageCred.getEstado().equals("I")? true:false);
+                } else {
+                    System.out.println("Else - contraseña incorrecta");
+                    throw new UnathorizedException("Contraseña incorecta");
+                }
+            } catch (NoSuchAlgorithmException e) {
+                throw new BadRequestException("Error en el algoritmo");
+            } catch (InvalidKeySpecException e) {
+                throw new UnathorizedException("Contraseña invalida");
+            }
+        }else
+            throw new UnathorizedException("Usuario invalido");
+    }
+
     //**======================FUNCIONES APOYO========================================**//
+
+    /**
+     * verifica que una cedula cumpla lo requerido
+     * @param cedula número de cedula de 10 digitos(0000111222)
+     */
+    private void verificaCedula(String cedula){
+        RegistrarEmpleadoPojo empleado = new RegistrarEmpleadoPojo();
+        boolean cumpleCedula=cedula.length() !=10?false:true;
+        if(cumpleCedula) {
+            cumpleCedula = empleado.validarCampo(cedula, Constantes.CtteRegexSoloNumeros);
+            if(!cumpleCedula)
+                throw new BadRequestException("Cedula no cumple (10 Dígitos - solo numeros)");
+        }else
+            throw new BadRequestException("Cedula no cumple (10 Dígitos - solo numeros)");
+    }
 
     /**
      * funcion para persistencia de empleado
@@ -106,6 +187,12 @@ public class EmpleadoCoreServiceImpl implements EmpleadoCoreService {
         }
     }
 
+    /**
+     * Funcion para asignar rol al empleado
+     * @param idRol id de rol a aasignar
+     * @param empleado entidad empleado para persistencia
+     * @return lista de rol
+     */
     private List<CoreRolAsignadoEntity> asignarRol(int idRol, CoreEmpleadosEntity empleado){
         List<CoreRolAsignadoEntity> listaRoles = new ArrayList<>();
         // buscar rol
@@ -130,6 +217,38 @@ public class EmpleadoCoreServiceImpl implements EmpleadoCoreService {
                 empleadoNuevo.getTercerApellido(),
                 empleadoNuevo.getCorreoElectronico(),
                 "A");
+    }
+
+    /**
+     * funcion de cast para empleado pojo
+     * @param empleadoEntity datos de empleado a mostrar
+     * @return entity con datos basicos
+     */
+    private ActualizaEmpleadoPojo castEmpleadoPojo(CoreEmpleadosEntity empleadoEntity){
+        return new ActualizaEmpleadoPojo(
+                empleadoEntity.getCedula(),
+                empleadoEntity.getNombres(),
+                empleadoEntity.getPrimerApellido(),
+                empleadoEntity.getSegundoApellido(),
+                empleadoEntity.getTercerApellido(),
+                empleadoEntity.getCorreoElectronico(),
+                empleadoEntity.getDomicilio(),
+                empleadoEntity.getTelefonoMovil(),
+                empleadoEntity.getFechaNacimiento(),
+                castVacunacion(empleadoEntity.getCoreVacunacionsById()));
+    }
+
+    /**
+     * Casteo de valores de la informacion de dosis aplicadas a un empleado
+     * @param vacunacionesEntity entidad dosis aplicadas
+     * @return lista de dosis aplicadas a un empleado
+     */
+    private List<VacunaEmpleadoPojo> castVacunacion(List<CoreVacunacionEntity> vacunacionesEntity){
+        List<VacunaEmpleadoPojo> listaVacunas = new ArrayList<VacunaEmpleadoPojo>();
+        for(CoreVacunacionEntity vacuna : vacunacionesEntity){
+            listaVacunas.add(new VacunaEmpleadoPojo(vacuna.getId(),vacuna.getDosis(),vacuna.getFechaDosis()));
+        }
+        return listaVacunas;
     }
 
     /**
@@ -186,5 +305,56 @@ public class EmpleadoCoreServiceImpl implements EmpleadoCoreService {
             mensaje += !resp? "Tercer Apellido debe tener solo letras \\n":"";
         }
         return mensaje;
+    }
+
+    /**
+     * Funcion para generar el token
+     * @param credenciales credenciales ingresados
+     * @return      token generado
+     */
+    private String getJWTToken(CoreCredencialesEntity credenciales) {
+        Gson gson = new Gson();
+        //obtener roles de usuario
+        List<String> roles = convertirListaRoles(rolDeUsuario(credenciales.getUsuario()));
+        String[] rolesUsuario = roles.toArray(new String[0]);
+
+        //TODO: REALIZA LA EXPIRACION EN 2 SEMANAS  -> 1209600000 /// 2 dias -> 172800000  /// 1 minuto -> 60000
+        PayLoadPojo carga = new PayLoadPojo(credenciales.getCoreEmpleadosByIdEmpleado().getNombres()+" "+
+                credenciales.getCoreEmpleadosByIdEmpleado().getPrimerApellido() ,
+                rolesUsuario ,credenciales.getCoreEmpleadosByIdEmpleado().getCorreoElectronico(),
+                System.currentTimeMillis() + 1209600000 );
+        //payload para el token
+        String payload = gson.toJson(carga);
+//        System.out.println("Carga json "+payload );
+        String token = Jwts
+                .builder()
+                .setPayload(payload)
+                .signWith(SignatureAlgorithm.HS512,Constantes.CtteSecretJwt.getBytes())
+                .compact();
+
+        return "Bearer " + token;
+    }
+
+    /**
+     * cast para roles a List String
+     * @param roles roles del empleado
+     * @return list<string> de roles
+     */
+    private List<String> convertirListaRoles(List<CoreRolAsignadoEntity> roles){
+        List<String> respuestRol = new ArrayList<>();
+        for(CoreRolAsignadoEntity rol : roles){
+            respuestRol.add(rol.getParRolesByIdRol().getNombreRol());
+        }
+        return respuestRol;
+    }
+
+    /**
+     *Obtiene listado de roles del usuario
+     * @param usuario entra el correo
+     * @return lista de roles de un usuario
+     */
+    private List<CoreRolAsignadoEntity> rolDeUsuario(String usuario){
+        CoreCredencialesEntity credencial = credencialesRepository.findByUsuario(usuario);
+        return credencial.getCoreEmpleadosByIdEmpleado().getCoreRolAsignadosById();
     }
 }

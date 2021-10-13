@@ -13,6 +13,8 @@ public interface CoreEmpleadosRepository extends JpaRepository<CoreEmpleadosEnti
 
     CoreEmpleadosEntity findByCedulaAndEstado(String cedula, String estado);
 
+    CoreEmpleadosEntity findByCedula(String cedula);
+
     @Query("select distinct e from CoreEmpleadosEntity e left join CoreVacunacionEntity v on e.id = v.coreEmpleadosByIdEmpleado.id where v.coreEmpleadosByIdEmpleado is not null")
     List<CoreEmpleadosEntity> findAllVacunados();
 

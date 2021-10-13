@@ -6,7 +6,7 @@
     2) Pasos para la instalacion
     3) Creacion de archivo jar
     4) Despliege en DOCKER
-    5) Informcion Dev
+    5) Información Developer
 #####Nota: los archivos se encuentran en el directorio 
 ####./Z_documentos_instalacion/
        1) BD_EsquemaBk.backup
@@ -14,9 +14,9 @@
        3) docker-compose.yaml
        4) ejecuta_vacunacion.bat
        5) Modelo de Datos inventario_vacunacion.pdf
-#####Nota.- La base de datos conta de un diccionario de datos en sus scripts
+#####Nota.- La base de datos consta de un diccionario de datos en sus scripts
 ######Requisitos:
-    * Open JDK 8 o superior
+    * Open JDK 8 o superior (si fuera superior configurar con la versión de java en el tag <properties> del archivo pom.xml
     * Maven
     * Postgresql
     * Conexión a internet para descarga de repositorios y Clonación de proyecto
@@ -44,9 +44,9 @@
             * Ingrese "usuario": "Alvaro.777111", clave=777111
             * Copie el token de la respuesta exceptuando Bearer
             * Clic en el botón Authorize (en la parte superior de la página) con icono de candado, se abrirá una ventana (Available authorizations).
-            * Ya puede acceder a los end Points según el Rol
             * Pegar el token copiado en la ventana pop up
             * Cerrar la ventana
+            * Ya puede acceder a los end Points según el Rol
             * El usuario Alvaro.777111 tiene rol Administrador
             * Se recomienda Crear otro usuario con rol Administrador
             * Crear nuevos usuarios

@@ -1,26 +1,26 @@
-   #[RETO APLICACION KRUGERCORP]()
-   ###INSTALACION DE ENTORNO NUEVO
- #####Inventario de vacunación de empleados
-######Contenido:
+   # [RETO APLICACION]()
+   ### INSTALACION DE ENTORNO NUEVO
+ ##### Inventario de vacunación de empleados
+###### Contenido:
     1) Requisitos
     2) Pasos para la instalacion
     3) Creacion de archivo jar
     4) Despliege en DOCKER
     5) Información Developer
-#####Nota: los archivos se encuentran en el directorio 
-####./Z_documentos_instalacion/
+##### Nota: los archivos se encuentran en el directorio 
+#### Z_documentos_instalacion/
        1) BD_EsquemaBk.backup
        2) BK_Data_vacunacion.backup
        3) docker-compose.yaml
        4) ejecuta_vacunacion.bat
        5) Modelo de Datos inventario_vacunacion.pdf
-#####Nota.- La base de datos consta de un diccionario de datos en sus scripts
-######Requisitos:
+##### Nota.- La base de datos consta de un diccionario de datos en sus scripts
+###### Requisitos:
     * Open JDK 8 o superior (si fuera superior configurar con la versión de java en el tag <properties> del archivo pom.xml
     * Maven
     * Postgresql
     * Conexión a internet para descarga de repositorios y Clonación de proyecto
-#####Pasos para la instalación:
+##### Pasos para la instalación:
 
    1) Instalar Postgresql, si ya lo tiene instalado vaya al paso 2.
    2) Crear la base de datos inventario_vacunacion:
@@ -55,8 +55,8 @@
                 * Formato Clave   -> Cedula_10_Digitos
 10) Solo Usuarios Administradores pueden Acceder a reportes
 11) Contraseñas con cifrado PBE PBEKeySpec (seguridad alta)
-####Creación de archivo Jar
-######Comandos:
+#### Creación de archivo Jar
+###### Comandos:
     1) Situarse en el directorio de proyecto
     
         * mvn clean
@@ -72,8 +72,8 @@
     4) Se adjunta el archivo .bat con variables de entorno para ejecucion
         * ejecuta_vacunacion.bat  (modificar variables de entorno de este archivo para conexion a base de datos)
     
-####Despliege en DOCKER 
-######Comandos Docker-compose:
+#### Despliege en DOCKER 
+###### Comandos Docker-compose:
     1) Debe tener instalado docker y docker-compose en su equipo
         * se dejo un archivo docker-compose.yaml con la configuracion nesesaria
     
@@ -100,7 +100,7 @@
     9) ejecutar los siguientes comandos
         * ctrl c para cerrar la ejecucion 
         * docker-compose up -d
-### Desarrollado en fecha 10/2021 por:
+### Desarrollado por:
 * ##### Alvaro Gutierrez Copa
 * ##### WhatsApp 70682262 
 * ##### Celular  68008056 

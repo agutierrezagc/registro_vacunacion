@@ -99,7 +99,12 @@
     
     9) ejecutar los siguientes comandos
         * ctrl c para cerrar la ejecucion 
+        * docker-compose build
         * docker-compose up -d
+        
+    10) adicionalmente puede revisar los logs con el siguiente comando
+        * docker-compose logs -f
+        
 ### Desarrollado por:
 * ##### Alvaro Gutierrez Copa
 * ##### WhatsApp 70682262 

@@ -107,7 +107,7 @@
         
 ### Desarrollado por:
 * ##### Alvaro Gutierrez Copa
-* ##### WhatsApp 70682262 
-* ##### Celular  68008056 
+* ##### WhatsApp +591 70682262 
+* ##### Celular  +591 68008056 
 * ##### Email    alvarito.agc4@gmail.com
  
